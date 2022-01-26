@@ -11,11 +11,11 @@ import math
 
 n = 1000 # number of agents
 t = 20000 # number of timesteps
-update_interval = 5 # update interval in ms
 tau = 0.8 # threshold > 0
 mu = 0.4 # adjustment parameter 0 < µ ≤ 0.5
-show_animation = False # whether the grid updates should be animated
 show_logs = False # whether additional log messages should be displayed
+show_animation = False # whether the grid updates should be animated
+update_interval = 5 # update interval in ms (only relevant if show_animation is true)
 
 def log(message):
     if show_logs: print(message)
@@ -46,7 +46,7 @@ def adjust_opinions(opinion1, opinion2):
     return adj1, adj2
 
 
-def update_grid(frameNum, img, grid, n):
+def update_grid(grid):
     global t
     log(f'timesteps left: {t}')
     
@@ -71,12 +71,14 @@ def update_grid(frameNum, img, grid, n):
 
     # update data
     t =  t - 1
-    if img:
-        img.set_data(grid)
-        grid[:] = grid[:]
-        return img
+        
 
-
+def draw_grid(frameNum, img, grid):
+    # TODO: figure out how to make drawing independent of update
+    update_grid(grid)
+    img.set_data(grid)
+    grid[:] = grid[:]
+    return img
 
 def main():
     print("start opinion dynamics model....")
@@ -87,20 +89,15 @@ def main():
     fig, ax = plt.subplots()
     img = ax.imshow(grid, interpolation='nearest')
     if show_animation:
-        anim = animation.FuncAnimation(fig, update_grid, fargs=(img, grid, n),
-                                frames = 10,
-                                interval=update_interval,
-                                save_count=50)
+        anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid),
+                                frames=60,
+                                interval=update_interval)
     else:
-        while t > 1:
-            update_grid(None, img=img, grid=grid, n=n)
-        update_grid(None, img=img, grid=grid, n=n)
+        while t > 0:
+            update_grid(grid)
+        img.set_data(grid)
+
     plt.show()
-
-
-def parameter_sweep():
-    # TODO: implement
-    pass
 
 
 if __name__ == "__main__":
