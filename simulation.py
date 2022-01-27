@@ -1,21 +1,25 @@
 from cmath import sqrt
+import imghdr
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import random
 import math
+from datetime import datetime
 
 # ================= #
 # define parameters #
 # ================= #
 
 n = 1000 # number of agents
-t = 20000 # number of timesteps
-tau = 0.8 # threshold > 0
-mu = 0.4 # adjustment parameter 0 < µ ≤ 0.5
+t = 1000 # number of timesteps
+t_init = t
+taus = [0.8, 0.6] # threshold > 0
+mus = [0.4, 0.5] # adjustment parameter 0 < µ ≤ 0.5
 show_logs = False # whether additional log messages should be displayed
 show_animation = False # whether the grid updates should be animated
 update_interval = 5 # update interval in ms (only relevant if show_animation is true)
+save_endresult = True # whether to store graphical representation of endresult (or endresults for each combination of tau and mu) as image
 
 def log(message):
     if show_logs: print(message)
@@ -30,9 +34,10 @@ def initialize_grid(n,lo,hi):
 
     """
     dim = math.isqrt(n)
+
     # use seed to get same grid for each fn call if input params not modified
-    rng = np.random.default_rng(12345)
-    return rng.uniform(lo, hi, size=(dim, dim))
+    np.random.seed(42)
+    return np.random.uniform(lo, hi, size=(dim, dim))
 
 
 def get_random_agent(n):
@@ -40,13 +45,13 @@ def get_random_agent(n):
     return (x,y)
 
 
-def adjust_opinions(opinion1, opinion2):
+def adjust_opinions(mu, opinion1, opinion2):
     adj1 = opinion1 + mu * (opinion2-opinion1)
     adj2 = opinion2 + mu * (opinion1-opinion2)
     return adj1, adj2
 
 
-def update_grid(grid):
+def update_grid(grid, img, tau, mu):
     global t
     log(f'timesteps left: {t}')
     
@@ -64,39 +69,65 @@ def update_grid(grid):
     #    (check number of timestamps)
     if (difference <= tau) and (t >= 0):
         # 4. adjust opinions 
-        grid[x1][y1], grid[x2][y2] = adjust_opinions(grid[x1][y1],grid[x2][y2]) 
+        grid[x1][y1], grid[x2][y2] = adjust_opinions(grid[x1][y1],grid[x2][y2], mu) 
         log('adjusted opinions:')
         log(f'{grid[x1][y1]}|{grid[x2][y2]}')
 
 
     # update data
     t =  t - 1
+
+    if t == 0 and save_endresult:
+        save_gridimg(grid, img, tau, mu)
         
 
-def draw_grid(frameNum, img, grid):
+def save_gridimg(grid, img, tau, mu):
+    print('\nsaving figure')
+    print(f't: {t}')
+    print(f'tau: {tau}')
+    print(f'mu: {mu}\n')
+
+    img.set_data(grid)
+
+    filename = f't-init{t_init}_t-curr{t}_tau{str(tau).replace(".", "_")}_mu{str(mu).replace(".", "_")}__{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}'
+    plt.savefig(filename)
+
+def draw_grid(frameNum, img, grid, tau, mu):
     # TODO: figure out how to make drawing independent of update
-    update_grid(grid)
+    update_grid(grid, img, tau, mu)
     img.set_data(grid)
     grid[:] = grid[:]
     return img
 
 def main():
     print("start opinion dynamics model....")
-    # initialize grid with n agents
-    grid = initialize_grid(n, 0, 1)
+    global t# TODO: learn about variable scopes in Python, rewrite this mess - pass less variables around like crazy
 
     # set up animation
     fig, ax = plt.subplots()
+    # initialize grid with n agents
+    grid = initialize_grid(n, 0, 1)
     img = ax.imshow(grid, interpolation='nearest')
-    if show_animation:
-        anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid),
-                                frames=60,
-                                interval=update_interval)
-    else:
-        while t > 0:
-            update_grid(grid)
-        img.set_data(grid)
 
+    for tau in taus:
+        for mu in mus:
+            t = t_init
+            print(f't reset to {t}')
+
+            #reset grid
+            grid = initialize_grid(n, 0, 1)
+            
+            # visual sanity check: has grid been reset correctly?
+            save_gridimg(grid, img, tau, mu)
+
+            if show_animation:
+                anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid, tau, mu),
+                                        frames=60,
+                                        interval=update_interval)
+            else:
+                while t > 0:
+                    update_grid(grid, img, tau, mu)
+                img.set_data(grid)
     plt.show()
 
 
