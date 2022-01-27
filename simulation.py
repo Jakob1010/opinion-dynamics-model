@@ -106,7 +106,7 @@ def main():
     # set up animation
     fig, ax = plt.subplots()
     # initialize grid with n agents
-    grid = initialize_grid(n, 0, 1)
+    grid = initialize_grid(n, -1, 1)
     img = ax.imshow(grid, interpolation='nearest')
 
     for tau in taus:
@@ -115,7 +115,7 @@ def main():
             print(f't reset to {t}')
 
             #reset grid
-            grid = initialize_grid(n, 0, 1)
+            grid = initialize_grid(n, -1, 1)
             
             # visual sanity check: has grid been reset correctly?
             save_gridimg(grid, img, tau, mu)
