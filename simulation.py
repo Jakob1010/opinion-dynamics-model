@@ -9,11 +9,11 @@ import math
 # define parameters #
 # ================= #
 
-N = 1000 # number of agents
-t = 20000 # number of timesteps
-update_interval = 5 # update interval in ms
-tau = 0.8 # threshold > 0
-mu = 0.4 # adjustment parameter 0 < µ ≤ 0.5
+N = 1000  # number of agents
+t = 20000  # number of timesteps
+update_interval = 5  # update interval in ms
+tau = 0.8  # threshold > 0
+mu = 0.4  # adjustment parameter 0 < µ ≤ 0.5
 
 
 def initialize_grid(n,lo,hi):
@@ -29,7 +29,7 @@ def initialize_grid(n,lo,hi):
 
 
 def get_random_agent(n):
-    x,y = random.sample(range(0, n), 2)
+    x, y = random.sample(range(0, n), 2)
     return (x,y)
 
 
@@ -74,7 +74,6 @@ def main():
 
     # initalize grid with ~ N agents
     n = int(math.sqrt(N)) + 1
-    grid = np.array([])
     grid = initialize_grid(n, 0, 1)
 
     # set up animation
@@ -84,11 +83,7 @@ def main():
                                   frames = 10,
                                   interval=update_interval,
                                   save_count=50)
-
- 
     plt.show()
-
-
 
 
 
