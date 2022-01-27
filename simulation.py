@@ -134,8 +134,7 @@ def main():
     cmap = plt.get_cmap("bwr")
     sm =  ScalarMappable(norm=norm, cmap=cmap)
     sm.set_array([])
-    cbar_ax = fig.add_axes([0, 0, 0.1, 1])
-    cbar = fig.colorbar(sm)#, ax=cbar_ax)
+    cbar = fig.colorbar(sm, ax=axs[:, len(mus) - 1], location='right', pad=0.2)
     cbar.ax.set_title("opinions:\nfar-left(-1)\n-\nfar-right(1)")
 
     fig.suptitle(f'Results after {t_init} timesteps', fontsize=16)
