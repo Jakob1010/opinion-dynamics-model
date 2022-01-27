@@ -1,5 +1,3 @@
-from cmath import sqrt
-import imghdr
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -14,8 +12,8 @@ from datetime import datetime
 n = 1000 # number of agents
 t = 1000 # number of timesteps
 t_init = t
-taus = [0.8, 0.6] # threshold > 0
-mus = [0.4, 0.5] # adjustment parameter 0 < µ ≤ 0.5
+taus = np.linspace(0.01, 1, num=5) # threshold > 0
+mus = np.linspace(0.1, 0.5, num=4) # adjustment parameter 0 < µ ≤ 0.5
 show_logs = False # whether additional log messages should be displayed
 show_animation = False # whether the grid updates should be animated
 update_interval = 5 # update interval in ms (only relevant if show_animation is true)
@@ -89,7 +87,7 @@ def save_gridimg(grid, img, tau, mu):
 
     img.set_data(grid)
 
-    filename = f't-init{t_init}_t-curr{t}_tau{str(tau).replace(".", "_")}_mu{str(mu).replace(".", "_")}__{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}'
+    filename = f't-init{t_init}_t-curr{t}_tau{str(round(tau, 2)).replace(".", "_")}_mu{str(round(mu, 2)).replace(".", "_")}__{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}'
     plt.savefig(filename)
 
 def draw_grid(frameNum, img, grid, tau, mu):
@@ -113,12 +111,8 @@ def main():
         for mu in mus:
             t = t_init
             print(f't reset to {t}')
-
             #reset grid
             grid = initialize_grid(n, -1, 1)
-            
-            # visual sanity check: has grid been reset correctly?
-            save_gridimg(grid, img, tau, mu)
 
             if show_animation:
                 anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid, tau, mu),
