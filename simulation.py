@@ -107,7 +107,7 @@ def main():
     fig, ax = plt.subplots()
     # initialize grid with n agents
     grid = initialize_grid(n, -1, 1)
-    img = ax.imshow(grid, interpolation='nearest')
+    img = ax.imshow(grid, interpolation='nearest', cmap="bwr")
 
     for tau in taus:
         for mu in mus:
