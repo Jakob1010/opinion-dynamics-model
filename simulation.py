@@ -4,13 +4,14 @@ import matplotlib.animation as animation
 import random
 import math
 from datetime import datetime
+from matplotlib.cm import ScalarMappable
 
 # ================= #
 # define parameters #
 # ================= #
 
 n = 1000 # number of agents
-t = 1000 # number of timesteps
+t = 20000 # number of timesteps
 t_init = t
 taus = np.linspace(0.01, 1, num=5) # threshold > 0
 mus = np.linspace(0.1, 0.5, num=4) # adjustment parameter 0 < µ ≤ 0.5
@@ -49,7 +50,7 @@ def adjust_opinions(mu, opinion1, opinion2):
     return adj1, adj2
 
 
-def update_grid(grid, img, tau, mu):
+def update_grid(grid, img, tau, mu, ax):
     global t
     log(f'timesteps left: {t}')
     
@@ -65,7 +66,7 @@ def update_grid(grid, img, tau, mu):
 
     # 3. (check if difference is smaller than threshold)
     #    (check number of timestamps)
-    if (difference <= tau) and (t >= 0):
+    if (difference <= tau) and (t >= 0) and(not((x1 == x2) and (y1 == y2))):
         # 4. adjust opinions 
         grid[x1][y1], grid[x2][y2] = adjust_opinions(grid[x1][y1],grid[x2][y2], mu) 
         log('adjusted opinions:')
@@ -76,10 +77,10 @@ def update_grid(grid, img, tau, mu):
     t =  t - 1
 
     if t == 0 and save_endresult:
-        save_gridimg(grid, img, tau, mu)
+        save_gridimg(grid, img, tau, mu, ax)
         
 
-def save_gridimg(grid, img, tau, mu):
+def save_gridimg(grid, img, tau, mu, ax):
     print('\nsaving figure')
     print(f't: {t}')
     print(f'tau: {tau}')
@@ -87,8 +88,10 @@ def save_gridimg(grid, img, tau, mu):
 
     img.set_data(grid)
 
-    filename = f't-init{t_init}_t-curr{t}_tau{str(round(tau, 2)).replace(".", "_")}_mu{str(round(mu, 2)).replace(".", "_")}__{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}'
-    plt.savefig(filename)
+    ax.set_title(f'tau={round(tau, 3)}, mu={round(mu, 3)}')
+
+    #filename = f't-init{t_init}_t-curr{t}_tau{str(round(tau, 2)).replace(".", "_")}_mu{str(round(mu, 2)).replace(".", "_")}__{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}'
+    #plt.savefig(filename)
 
 def draw_grid(frameNum, img, grid, tau, mu):
     # TODO: figure out how to make drawing independent of update
@@ -101,27 +104,41 @@ def main():
     print("start opinion dynamics model....")
     global t# TODO: learn about variable scopes in Python, rewrite this mess - pass less variables around like crazy
 
-    # set up animation
-    fig, ax = plt.subplots()
+    # create "grid of grids" - each cell will contain CA for particular combination of tau and mu
+    # note: extra column for colorbar (legend)
+    fig, axs = plt.subplots(len(taus), len(mus), figsize=(16, 18))
+    
     # initialize grid with n agents
     grid = initialize_grid(n, -1, 1)
-    img = ax.imshow(grid, interpolation='nearest', cmap="bwr")
 
-    for tau in taus:
-        for mu in mus:
+    for row, tau in enumerate(taus):
+        for col, mu in enumerate(mus):
             t = t_init
             print(f't reset to {t}')
             #reset grid
             grid = initialize_grid(n, -1, 1)
+            ax = axs[row, col]
+            ax.set_axis_off() # axis labels are not interesting, hide them
+            img = ax.imshow(grid, interpolation='nearest', cmap="bwr")
 
             if show_animation:
-                anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid, tau, mu),
+                anim = animation.FuncAnimation(fig, draw_grid, fargs=(img, grid, tau, mu, ax),
                                         frames=60,
                                         interval=update_interval)
             else:
                 while t > 0:
-                    update_grid(grid, img, tau, mu)
+                    update_grid(grid, img, tau, mu, ax)
                 img.set_data(grid)
+    
+    norm = plt.Normalize(-1, 1)
+    cmap = plt.get_cmap("bwr")
+    sm =  ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar_ax = fig.add_axes([0, 0, 0.1, 1])
+    cbar = fig.colorbar(sm)#, ax=cbar_ax)
+    cbar.ax.set_title("opinions:\nfar-left(-1)\n-\nfar-right(1)")
+
+    plt.savefig(f'{datetime.now().strftime("%Y-%m-%d_%H_%M_%S")}')
     plt.show()
 
 
