@@ -9,10 +9,8 @@ from matplotlib.cm import ScalarMappable
 # ================= #
 # define parameters #
 # ================= #
-
-
 n = 1000 # number of agents
-t = 1000 # number of timesteps
+t = 20000 # number of timesteps
 t_init = t
 taus = np.linspace(0.01, 1, num=5)  # threshold > 0
 mus = np.linspace(0.1, 0.5, num=4)  # adjustment parameter 0 < µ ≤ 0.5
