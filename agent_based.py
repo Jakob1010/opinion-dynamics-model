@@ -64,7 +64,7 @@ def do_param_sweep(mus, taus, n, max_t, movement_phase, dynamic):
             print(f"Simulation #{len(mus)*r+c}")
             agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, dynamic) 
             plt.subplot(len(mus), len(taus), len(mus)*r+c+1)
-            plot_grid(grid.get_raw_opinions(), f"{mu=}, {tau=}, {neighborhood=}, movement={movement_phase}, {dynamic=}")
+            plot_grid(grid.get_raw_opinions(), f"{mu=},{tau=},{neighborhood},movement={movement_phase},{dynamic=}")
             # TODO add more plots if needed
 
 
@@ -94,11 +94,11 @@ if __name__ == '__main__':
     # adapt parameters here
     n = 1089  # number of agents, in case of grid MUST be percect sqaure (33x33=1089)
     max_t = 100
-    neighborhood = "Von Neumann"  # used for opinion adjustement as well as possible movement phase
+    neighborhood = "Moore 2"  # used for opinion adjustement as well as possible movement phase
     mu = 0.5
     tau = 1
 
-    param_sweep = False
+    param_sweep = True
     mus = [0.1, 0.2, 0.3, 0.5]
     taus = [0.5, 0.75, 1, 1.5]
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     else:
         # Code for one run:
         agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, dynamic)
-        plot_grid(grid.get_raw_opinions(), f"{mu=}, {tau=}, {neighborhood=}, movement={movement_phase}, {dynamic=}")
+        plot_grid(grid.get_raw_opinions(), f"{mu=},{tau=},{neighborhood},movement={movement_phase},{dynamic=}")
         plot_temporal_opinions(grid.data, "Temporal Opinions of agents")
         plt.show()
     
