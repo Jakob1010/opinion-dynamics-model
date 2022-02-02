@@ -47,11 +47,10 @@ def plot_temporal_opinions(grid, title):
     for row in grid:
         for agent in row:
             y = agent.get_temporal_opinions()
-            #plt.scatter(x, y, alpha=0.01, facecolors='none', edgecolors='black', linewidths=0.25)
             res[f"agent{agent.id}"] = y
     res = res.stack().reset_index()
     # plot only a sample for performance
-    res = res.sample(200_000)
+    res = res.sample(500_000)
     res.columns = ['time', 'agent', 'opinions']
     res.plot(x='time', y='opinions', kind="scatter", facecolors='none', edgecolors='black', alpha=0.02, linewidths=0.5)
     plt.ylim(-1, 1)

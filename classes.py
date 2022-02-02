@@ -24,11 +24,17 @@ class Agent:
         while len(self.__opinions) < timestep:
             self.__opinions.append(self.__opinions[-1])
         self.__opinions.append(new_opinion)  # append in list so every agent has temporial data of its opinion
+        if len(self.__opinions) == 20002:
+            print("Achtung", timestep, new_opinion)
         self.last_interaction_at = timestep
         self.__opinion = new_opinion
 
     def get_coords(self):
         return self.__x, self.__y
+
+    def set_coords(self, x, y):
+        self.__x = x
+        self.__y = y
 
 
 class Grid:
@@ -36,14 +42,21 @@ class Grid:
         if n != math.isqrt(n)**2:
             raise ValueError("n must be a perfect square to get a quadratic grid")
         self.max_index = math.isqrt(n) - 1
-        self.grid = []
+        self.data = []
 
     def get_random_neighbour(self, x, y, neighborhood):
-        available_neighborhoods = ['Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2']
+        available_neighborhoods = ['Random', 'Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2']
         if neighborhood not in available_neighborhoods:
             raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {available_neighborhoods}")
 
-        if neighborhood in ['Moore', 'Moore 2']:
+        if neighborhood == 'Random':
+            nx = random.choice([i for i in range(self.max_index+1)])
+            ny = random.choice([i for i in range(self.max_index+1)])
+            while nx == x and ny == y:
+                nx = random.choice([i for i in range(self.max_index+1)])
+                ny = random.choice([i for i in range(self.max_index+1)])
+            neighbors = [(nx, ny)]
+        elif neighborhood in ['Moore', 'Moore 2']:
             if neighborhood == 'Moore':
                 neighbors = get_moore_neighborhood(1, x, y)
             else:  # degree of two
@@ -58,13 +71,17 @@ class Grid:
         valid_neighbors = []
         for n in neighbors:
             if 0 <= n[0] <= self.max_index and 0 <= n[1] <= self.max_index:
-                valid_neighbors.append(self.grid[n[0]][n[1]])
+                valid_neighbors.append(self.data[n[0]][n[1]])
         return random.choice(valid_neighbors)
             
 
     def swap_positions(self, x1, y1, x2, y2):
-        self.grid[x1][y1], self.grid[x2][y2] = self.grid[x2][y2], self.grid[x1][y1]
+        self.data[x1][y1], self.data[x2][y2] = self.data[x2][y2], self.data[x1][y1]
+        # also update data in the actual agents
+        self.data[x1][y1].set_coords(x1, y1)
+        self.data[x2][y2].set_coords(x2, y2)
+
 
     def get_raw_opinions(self):
-        res = [[i.get_opinion() for i in row] for row in self.grid]
+        res = [[i.get_opinion() for i in row] for row in self.data]
         return res

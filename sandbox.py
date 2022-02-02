@@ -1,5 +1,3 @@
-res = [1]
+import random
 
-res = res + [1,2,3]
-
-print(res)
+random.choice([])
