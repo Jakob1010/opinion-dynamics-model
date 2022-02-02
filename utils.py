@@ -50,7 +50,7 @@ def plot_temporal_opinions(grid, title):
             res[f"agent{agent.id}"] = y
     res = res.stack().reset_index()
     # plot only a sample for performance
-    res = res.sample(500_000)
+    res = res.sample(min(500_000, len(res)))
     res.columns = ['time', 'agent', 'opinions']
     res.plot(x='time', y='opinions', kind="scatter", facecolors='none', edgecolors='black', alpha=0.02, linewidths=0.5)
     plt.ylim(-1, 1)
