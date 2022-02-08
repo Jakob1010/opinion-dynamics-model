@@ -8,7 +8,7 @@ from utils import *
 from classes import Grid, Agent
 
 
-def simulate_step(grid, agents, mu, tau, neighborhood, timestep, concurrent_updates):
+def simulate_step(grid: Grid, agents: list[Agent], mu, tau, neighborhood, timestep, concurrent_updates):
     if neighborhood not in Grid.available_neighborhoods:
         raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {Grid.available_neighborhoods}")
     if concurrent_updates:
@@ -34,7 +34,7 @@ def simulate_step(grid, agents, mu, tau, neighborhood, timestep, concurrent_upda
         agent2.update_opinion(op2, timestep)
 
 
-def do_movement_phase(grid, agents, neighborhood):
+def do_movement_phase(grid: Grid, agents: list[Agent], neighborhood):
     """
     Implements the movement phase where agents can switch places
     For now two random agents switch places, maybe there are more sophisticated ways?  --> TODO

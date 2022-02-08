@@ -75,7 +75,7 @@ class Grid:
         self.max_index = math.isqrt(n) - 1
         self.data = []
 
-    def get_random_neighbour(self, x, y, neighborhood):
+    def get_random_neighbour(self, x, y, neighborhood) -> Agent:
         if neighborhood not in Grid.available_neighborhoods:
             raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {Grid.available_neighborhoods}")
 
