@@ -36,6 +36,7 @@ def adjust_opinions(opinion1, opinion2, mu, tau):
 
 def plot_grid(grid, title):
     cmap = plt.get_cmap("bwr")
+    plt.axis('off')
     img = plt.imshow(grid, interpolation='nearest', cmap=cmap, origin='lower')
     plt.clim(-1, 1)
     plt.colorbar(img)

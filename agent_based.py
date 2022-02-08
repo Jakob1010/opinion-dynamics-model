@@ -1,23 +1,20 @@
 import matplotlib.pyplot as plt
 import random
 
-from sklearn import neighbors
-
 from utils import *
 from classes import Grid, Agent
 
 
-def simulate_step(grid, agents, mu, tau, neighborhood, timestep, dynamic):
-    available_neighborhoods = ['Random', 'Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2']
-    if neighborhood not in available_neighborhoods:
-        raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {available_neighborhoods}")
-    if dynamic:
+def simulate_step(grid, agents, mu, tau, neighborhood, timestep, concurrent_updates):
+    if neighborhood not in Grid.available_neighborhoods:
+        raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {Grid.available_neighborhoods}")
+    if concurrent_updates:
         for agent in agents:
             if agent.last_interaction_at >= timestep:  # has already been updated by a neighbor
                 continue
             x, y = agent.get_coords()
             neighbor = grid.get_random_neighbour(x, y, neighborhood)
-            if neighbor.last_interaction_at < timestep:  # if this neighbor has not updated its opinion in this step
+            if neighbor.last_interaction_at < timestep:  # neighbor has not updated its opinion in this step
                 op1 = agent.get_opinion()
                 op2 = neighbor.get_opinion()
                 op1, op2 = adjust_opinions(op1, op2, mu, tau)
@@ -55,20 +52,21 @@ def ffill_all_remaining_agents(agents, timesteps):
     """
     for agent in agents:
         if len(agent.get_temporal_opinions()) < timesteps + 1: # plus one bc of initial opinion
-            agent.update_opinion(agent.get_opinion(), timesteps)  # this ffills all the agents temporial data to be complete
+            agent.update_opinion(agent.get_opinion(), timesteps)  # this ffills all the agents temporal data to be complete
 
 
-def do_param_sweep(mus, taus, n, max_t, movement_phase, dynamic):
+def do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates):
     for r, mu in enumerate(mus):
         for c, tau in enumerate(taus):
             print(f"Simulation #{len(mus)*r+c}")
-            agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, dynamic) 
+            _, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates) 
             plt.subplot(len(mus), len(taus), len(mus)*r+c+1)
-            plot_grid(grid.get_raw_opinions(), f"{mu=},{tau=},{neighborhood},movement={movement_phase},{dynamic=}")
+            plot_grid(grid.get_raw_opinions(), f"{mu=}, {tau=}")
+            plt.suptitle(f"Simulation results\nneighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
             # TODO add more plots if needed
 
 
-def do_one_run(mu, tau, n, max_t, movement_phase, dynamic):
+def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
     random.seed(1234567890)
     agents = []
     grid = Grid(n)
@@ -83,7 +81,7 @@ def do_one_run(mu, tau, n, max_t, movement_phase, dynamic):
     t = 0
     while t < max_t:
         t += 1
-        simulate_step(grid, agents, mu, tau, neighborhood, t, dynamic)
+        simulate_step(grid, agents, mu, tau, neighborhood, t, concurrent_updates)
         if movement_phase:
             do_movement_phase(grid, agents, neighborhood)
     ffill_all_remaining_agents(agents, max_t)
@@ -92,31 +90,34 @@ def do_one_run(mu, tau, n, max_t, movement_phase, dynamic):
 
 if __name__ == '__main__':
     # adapt parameters here
-    n = 1089  # number of agents, in case of grid MUST be percect sqaure (33x33=1089)
+    n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
     max_t = 100
-    neighborhood = "Moore 2"  # used for opinion adjustement as well as possible movement phase
-    mu = 0.5
-    tau = 1
+    neighborhood = "Moore 2"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions 
+    tau = 1 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
+    mu = 0.5 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
 
-    param_sweep = True
-    mus = [0.1, 0.2, 0.3, 0.5]
-    taus = [0.5, 0.75, 1, 1.5]
+    param_sweep = False # if True, all combinations of mus and taus (provided below) are tested in separate simulations with the same initial grid 
+    mus = [0.1, 0.2, 0.3, 0.4, 0.5]
+    taus = [0.25, 0.5, 0.75, 1, 1.5]
 
-    movement_phase = True
-    # if dynamic is set to True, less timesteps are required until the model reaches its end state (all close to zero)
-    # increases computational performance as it is faster to do dynamic with t=100 than non dynamic with t=20000
-    # which leads to practically the same result where the dynamic version is even further advanced
-    dynamic = True  # whether to perform updates dynamically on the whole network every timestep
+    movement_phase = False # whether agents can also move; only relevant for grid simulations
+
+    concurrent_updates = True  # whether to perform updates on all agents every timestep
+    # if concurrent_updates is set to True, all agents are updated simultaneously in a single timestep
+    # due to several updates happening each timestep rather than just a single one, the simulation advances much more quickly
+    # the "concurrent updates" version of a simulation will be much much further advanced after a given number of time steps compared to the "sequential" version
+
     # End of parameters
 
     if param_sweep:
         # Code for parameter sweep:
-        do_param_sweep(mus, taus, n, max_t, movement_phase, dynamic)
+        do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates)
         plt.show()
     else:
         # Code for one run:
-        agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, dynamic)
-        plot_grid(grid.get_raw_opinions(), f"{mu=},{tau=},{neighborhood},movement={movement_phase},{dynamic=}")
+        agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
+        plot_grid(grid.get_raw_opinions(), "")
+        plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}\n{'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
         plot_temporal_opinions(grid.data, "Temporal Opinions of agents")
         plt.show()
     

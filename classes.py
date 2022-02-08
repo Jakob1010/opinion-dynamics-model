@@ -23,7 +23,7 @@ class Agent:
         # this has performance reasons
         while len(self.__opinions) < timestep:
             self.__opinions.append(self.__opinions[-1])
-        self.__opinions.append(new_opinion)  # append in list so every agent has temporial data of its opinion
+        self.__opinions.append(new_opinion)  # append in list so every agent has temporal data of its opinion
         if len(self.__opinions) == 20002:
             print("Achtung", timestep, new_opinion)
         self.last_interaction_at = timestep
@@ -38,6 +38,9 @@ class Agent:
 
 
 class Grid:
+    # for 'Moore' and 'Von Neumann', ' 2' suffix means second degree instead of first degree!
+    available_neighborhoods = ['Random', 'Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2']
+
     def __init__(self, n):
         if n != math.isqrt(n)**2:
             raise ValueError("n must be a perfect square to get a quadratic grid")
@@ -45,9 +48,8 @@ class Grid:
         self.data = []
 
     def get_random_neighbour(self, x, y, neighborhood):
-        available_neighborhoods = ['Random', 'Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2']
-        if neighborhood not in available_neighborhoods:
-            raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {available_neighborhoods}")
+        if neighborhood not in Grid.available_neighborhoods:
+            raise ValueError(f"Invalid neighborhood: ({neighborhood}) passed, expected one of: {Grid.available_neighborhoods}")
 
         if neighborhood == 'Random':
             nx = random.choice([i for i in range(self.max_index+1)])
