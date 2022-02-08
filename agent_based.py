@@ -97,8 +97,8 @@ if __name__ == '__main__':
     mu = 0.5 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
 
     param_sweep = False # if True, all combinations of mus and taus (provided below) are tested in separate simulations with the same initial grid 
-    mus = [0.1, 0.2, 0.3, 0.4, 0.5]
-    taus = [0.25, 0.5, 0.75, 1, 1.5]
+    mus = [0.1, 0.2, 0.3, 0.5]
+    taus = [0.5, 0.75, 1, 1.5]
 
     movement_phase = False # whether agents can also move; only relevant for grid simulations
 
