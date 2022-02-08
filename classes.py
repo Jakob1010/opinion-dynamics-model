@@ -1,33 +1,61 @@
 import math
 import random
+import numpy as np
+import pandas as pd
+from itertools import groupby
 
 from utils import get_von_neumann_neighborhood, get_moore_neighborhood
 
 class Agent:
-    def __init__(self, opinion, x, y, id=-1):
+    def __init__(self, initial_opinion, x, y, timesteps, id=-1):
         self.id = id
-        self.__opinion = opinion
-        self.__opinions = [opinion]
+        self.__opinions = np.full(timesteps + 1, np.nan)# +1 because of initial opinion
+        self.__opinions[0] = initial_opinion
         self.__x = x
         self.__y = y
-        self.last_interaction_at = 0 # this argument is especially needed for the last task when we want multiple agents to be updated in one timestep
+        self.last_interaction_at = 0
+    
     
     def get_opinion(self):
-        return self.__opinion
+        '''
+        returns the current opinion of the agent, encoded as number
+        '''
+        return self.__opinions[self.last_interaction_at]
 
+    
     def get_temporal_opinions(self):
-        return self.__opinions
+        '''
+        returns pandas Series of agent's opinion across all timesteps
+        Any missing values (in case of no communcation happening at a given timestep) are forward-filled
+        '''
+        return pd.Series(self.__opinions, name=self.id).fillna(method="ffill")
+
+
+    def get_number_of_conversations(self):
+        '''
+        returns how often the agent communicated with some other agent (no matter if opinion changed or not)
+        Assumption: update_opinion() called each time a conversation happened
+        '''
+        return np.count_nonzero(~np.isnan(self.__opinions))
+        
+    def get_number_of_opinion_adjustments(self):
+        '''
+        returns how often the agent communicated with some other agent AND also changed its opinion
+        Assumption: update_opinion() called each time a conversation happened
+        '''
+        unique_opinions = len([k for k,g in groupby(self.__opinions) if k!=g and not np.isnan(k)])
+        return unique_opinions - 1
+
+    def get_opinion_adjustment_rate(self):
+        """
+        returns "success rate" of conversations, i.e. how often agent adjusted its opinion after a conversation
+        Assumption: update_opinion() called each time a conversation happened
+        """
+        return self.get_number_of_opinion_adjustments()/self.get_number_of_conversations()
 
     def update_opinion(self, new_opinion, timestep):
-        # we want data for each timestep --> no interaction in between so we simply ffill our last known opinion until we meet the current timestep
-        # this has performance reasons
-        while len(self.__opinions) < timestep:
-            self.__opinions.append(self.__opinions[-1])
-        self.__opinions.append(new_opinion)  # append in list so every agent has temporal data of its opinion
-        if len(self.__opinions) == 20002:
-            print("Achtung", timestep, new_opinion)
+        self.__opinions[timestep] = new_opinion
         self.last_interaction_at = timestep
-        self.__opinion = new_opinion
 
     def get_coords(self):
         return self.__x, self.__y

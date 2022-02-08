@@ -1,0 +1,579 @@
+Starting Simulation #0
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4046249
+Conversation success rate: 0.95
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.101078
+min          -0.998705      -0.018963
+25%          -0.508882      -0.016869
+50%          -0.031748      -0.015951
+75%           0.550749      -0.014866
+max           0.999757       0.613340
+
+
+Finished Simulation #0
+
+Starting Simulation #1
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4249206
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000562
+min          -0.998705      -0.000086
+25%          -0.508882       0.000203
+50%          -0.031748       0.000752
+75%           0.550749       0.001314
+max           0.999757       0.001632
+
+
+Finished Simulation #1
+
+Starting Simulation #2
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4255720
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000554
+min          -0.998705      -0.000083
+25%          -0.508882       0.000207
+50%          -0.031748       0.000757
+75%           0.550749       0.001305
+max           0.999757       0.001628
+
+
+Finished Simulation #2
+
+Starting Simulation #3
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257588
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000566
+min          -0.998705      -0.000119
+25%          -0.508882       0.000204
+50%          -0.031748       0.000756
+75%           0.550749       0.001313
+max           0.999757       0.001660
+
+
+Finished Simulation #3
+
+Starting Simulation #4
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257688
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000572
+min          -0.998705      -0.000137
+25%          -0.508882       0.000197
+50%          -0.031748       0.000760
+75%           0.550749       0.001317
+max           0.999757       0.001677
+
+
+Finished Simulation #4
+
+Starting Simulation #5
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 3922196
+Conversation success rate: 0.92
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.157115
+min          -0.998705      -0.041194
+25%          -0.508882      -0.041057
+50%          -0.031748      -0.041006
+75%           0.550749      -0.040966
+max           0.999757       0.660226
+
+
+Finished Simulation #5
+
+Starting Simulation #6
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4240689
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.042446
+min          -0.998705      -0.995169
+25%          -0.508882       0.002566
+50%          -0.031748       0.002578
+75%           0.550749       0.002591
+max           0.999757       0.002597
+
+
+Finished Simulation #6
+
+Starting Simulation #7
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4256539
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000012
+min          -0.998705       0.000738
+25%          -0.508882       0.000747
+50%          -0.031748       0.000758
+75%           0.550749       0.000770
+max           0.999757       0.000779
+
+
+Finished Simulation #7
+
+Starting Simulation #8
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257618
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000013
+min          -0.998705       0.000737
+25%          -0.508882       0.000746
+50%          -0.031748       0.000758
+75%           0.550749       0.000771
+max           0.999757       0.000780
+
+
+Finished Simulation #8
+
+Starting Simulation #9
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257690
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.000013
+min          -0.998705       0.000737
+25%          -0.508882       0.000746
+50%          -0.031748       0.000758
+75%           0.550749       0.000771
+max           0.999757       0.000780
+
+
+Finished Simulation #9
+
+Starting Simulation #10
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4070112
+Conversation success rate: 0.96
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.097547
+min          -0.998705      -0.015925
+25%          -0.508882      -0.015924
+50%          -0.031748      -0.015924
+75%           0.550749      -0.015924
+max           0.999757       0.588690
+
+
+Finished Simulation #10
+
+Starting Simulation #11
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4198132
+Conversation success rate: 0.99
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.081178
+min          -0.998705      -0.995169
+25%          -0.508882       0.003611
+50%          -0.031748       0.003612
+75%           0.550749       0.003612
+max           0.999757       0.908369
+
+
+Finished Simulation #11
+
+Starting Simulation #12
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4256819
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   2.813311e-07
+min          -0.998705   7.581295e-04
+25%          -0.508882   7.583912e-04
+50%          -0.031748   7.586354e-04
+75%           0.550749   7.588789e-04
+max           0.999757   7.591461e-04
+
+
+Finished Simulation #12
+
+Starting Simulation #13
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257623
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   2.947940e-07
+min          -0.998705   7.581226e-04
+25%          -0.508882   7.583681e-04
+50%          -0.031748   7.586318e-04
+75%           0.550749   7.589055e-04
+max           0.999757   7.591543e-04
+
+
+Finished Simulation #13
+
+Starting Simulation #14
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4257692
+Conversation success rate: 1.0
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   2.952933e-07
+min          -0.998705   7.581119e-04
+25%          -0.508882   7.583757e-04
+50%          -0.031748   7.586330e-04
+75%           0.550749   7.588963e-04
+max           0.999757   7.591644e-04
+
+
+Finished Simulation #14
+
+Starting Simulation #15
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 3397660
+Conversation success rate: 0.8
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.236242
+min          -0.998705      -0.680896
+25%          -0.508882      -0.107890
+50%          -0.031748      -0.107890
+75%           0.550749      -0.107890
+max           0.999757       0.554471
+
+
+Finished Simulation #15
+
+Starting Simulation #16
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4050003
+Conversation success rate: 0.95
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.075163
+min          -0.998705      -0.995169
+25%          -0.508882       0.001048
+50%          -0.031748       0.001048
+75%           0.550749       0.001048
+max           0.999757       0.847573
+
+
+Finished Simulation #16
+
+Starting Simulation #17
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4095075
+Conversation success rate: 0.96
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   1.527917e-10
+min          -0.998705   7.586366e-04
+25%          -0.508882   7.586367e-04
+50%          -0.031748   7.586369e-04
+75%           0.550749   7.586370e-04
+max           0.999757   7.586372e-04
+
+
+Finished Simulation #17
+
+Starting Simulation #18
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4095765
+Conversation success rate: 0.96
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   1.527541e-10
+min          -0.998705   7.586366e-04
+25%          -0.508882   7.586367e-04
+50%          -0.031748   7.586369e-04
+75%           0.550749   7.586370e-04
+max           0.999757   7.586372e-04
+
+
+Finished Simulation #18
+
+Starting Simulation #19
+simulated 500 of 5000 timesteps
+simulated 1000 of 5000 timesteps
+simulated 1500 of 5000 timesteps
+simulated 2000 of 5000 timesteps
+simulated 2500 of 5000 timesteps
+simulated 3000 of 5000 timesteps
+simulated 3500 of 5000 timesteps
+simulated 4000 of 5000 timesteps
+simulated 4500 of 5000 timesteps
+simulated 5000 of 5000 timesteps
+Total number of conversations: 4258791
+Total number of successful conversations: 4095817
+Conversation success rate: 0.96
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000   1.089000e+03
+mean          0.000759   7.586369e-04
+std           0.583277   1.582963e-10
+min          -0.998705   7.586366e-04
+25%          -0.508882   7.586367e-04
+50%          -0.031748   7.586369e-04
+75%           0.550749   7.586370e-04
+max           0.999757   7.586372e-04
+
+
+Finished Simulation #19

@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import random
+import numpy as np
+import pandas as pd
+import time
 
 from utils import *
 from classes import Grid, Agent
@@ -44,17 +47,6 @@ def do_movement_phase(grid, agents, neighborhood):
     x2, y2 = agent2.get_coords()
     grid.swap_positions(x1, y1, x2, y2)
 
-
-def ffill_all_remaining_agents(agents, timesteps):
-    """
-    This step is needed at the end of the simulation as it is ffilling the temporal data
-    for each agent up to the last timestep
-    """
-    for agent in agents:
-        if len(agent.get_temporal_opinions()) < timesteps + 1: # plus one bc of initial opinion
-            agent.update_opinion(agent.get_opinion(), timesteps)  # this ffills all the agents temporal data to be complete
-
-
 def do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates):
     run_number = 0
     for mu in mus:
@@ -78,7 +70,7 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
     for x in range(grid.max_index + 1):  # every row
         row = []
         for y in range(grid.max_index + 1):  # every column
-            new_agent = Agent(random.uniform(-1, 1), x, y, id=x*(grid.max_index+1)+y)
+            new_agent = Agent(random.uniform(-1, 1), x, y, id=x*(grid.max_index+1)+y, timesteps=max_t)
             agents.append(new_agent)
             row.append(new_agent)
         grid.data.append(row)
@@ -90,19 +82,46 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
             do_movement_phase(grid, agents, neighborhood)
         if (t % 500 == 0):
             print(f'simulated {t} of {max_t} timesteps')# log progress so we don't panic because we don't see anything
-    ffill_all_remaining_agents(agents, max_t)
+
+    print_run_statistics(agents, max_t)
     return agents, grid
+
+def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
+    start = time.time()
+    init_opinions = pd.Series([a.get_temporal_opinions()[0] for a in agents], name="Initial opinion")
+    final_opinions = pd.Series([a.get_temporal_opinions()[max_t] for a in agents], name="Final opinion")
+    successful_conversations = np.sum([a.get_number_of_opinion_adjustments() for a in agents])
+    total_conversations = np.sum([a.get_number_of_conversations() for a in agents])
+
+    conversation_success_rate = successful_conversations/total_conversations
+    average_conversation_rate = total_conversations/len(agents)/(max_t - 1)
+
+    print(f'\n---Simulation run summary---')
+    print(f'total number of timesteps: {max_t}')
+    print('other simulation parameters:')
+    print(", ".join(f"{param}: {value}" for param, value in other_sim_params.items()))
+    print(f'Total number of conversations: {total_conversations}')
+    print(f'Total number of successful conversations: {successful_conversations}')
+    print(f'Conversation success rate: {round(conversation_success_rate, 2)}')
+    print(f'Average conversation rate: {round(average_conversation_rate, 2)}')
+    print(f'Stats for opinion development:')
+    print(pd.concat([init_opinions, final_opinions], axis=1).describe())
+    end = time.time()
+    print(f'executed in {end - start} seconds')
+    print('\n')
+
+    return
 
 
 if __name__ == '__main__':
     # adapt parameters here
     n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
-    max_t = 10
+    max_t = 1000
     neighborhood = "Moore 2"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions 
-    tau = 1 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
-    mu = 0.5 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
+    tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
+    mu = 0.1 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
 
-    param_sweep = True # if True, all combinations of mus and taus (provided below) are tested in separate simulations with the same initial grid 
+    param_sweep = False # if True, all combinations of mus and taus (provided below) are tested in separate simulations with the same initial grid 
     mus = [0.1, 0.2, 0.3, 0.5]
     taus = [0.5, 0.75, 1, 1.5, 1.75]
 
