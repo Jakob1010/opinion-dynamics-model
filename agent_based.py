@@ -56,7 +56,7 @@ def do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates):
             print(f"Finished Simulation #{run_number}\n")
             run_number += 1
             plt.subplot(len(mus), len(taus), run_number)
-            plot_grid(grid.get_raw_opinions(), f"{mu=}, {tau=}")
+            plot_grid_data(grid.get_raw_opinions(), f"{mu=}, {tau=}")
             # TODO add more plots if needed
 
     plt.suptitle(f"Simulation results\nneighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
@@ -116,7 +116,7 @@ def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
 if __name__ == '__main__':
     # adapt parameters here
     n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
-    max_t = 1000
+    max_t = 100
     neighborhood = "Moore 2"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions 
     tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
     mu = 0.1 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
@@ -141,9 +141,13 @@ if __name__ == '__main__':
     else:
         # Code for one run:
         agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
-        plot_grid(grid.get_raw_opinions(), "")
-        plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}\n{'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
-        plot_temporal_opinions(grid.data, "Temporal Opinions of agents")
+        fig, axs = plt.subplots(1, 2, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+
+        plot_grid_data(grid.get_raw_opinions(), title="final grid state", ax=axs[1])
+        plt.tight_layout()
+        plt.subplots_adjust(top=0.87)
+        plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
+        plot_agent_opinions(agents, ax=axs[0])
         plt.show()
     
 

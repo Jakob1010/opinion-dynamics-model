@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 
 def get_moore_neighborhood(degree, x, y):
@@ -34,28 +35,44 @@ def adjust_opinions(opinion1, opinion2, mu, tau):
     adj2 = opinion2 + mu * (opinion1-opinion2)
     return adj1, adj2
 
-def plot_grid(grid, title):
+def plot_grid_data(grid_data, ax=None, title=None):
     cmap = plt.get_cmap("bwr")
     plt.axis('off')
-    img = plt.imshow(grid, interpolation='nearest', cmap=cmap, origin='lower')
+    img = plt.imshow(grid_data, interpolation='nearest', cmap=cmap, origin='lower')
     plt.clim(-1, 1)
     plt.colorbar(img)
-    plt.title(title)
+    if ax:
+        ax.plot()
+        if title:
+            ax.set_title(title)
+    else:
+        if title:
+            plt.title(title)
 
+def plot_agent_opinions(agents, ax):
+    agents_df = pd.concat([a.get_temporal_opinions() for a in agents], axis=1)
+    timesteps = len(agents_df.index)
 
-def plot_temporal_opinions(grid, title):
-    res = pd.DataFrame()
-    for row in grid:
-        for agent in row:
-            y = agent.get_temporal_opinions()
-            res[f"agent{agent.id}"] = y
-    res = res.stack().reset_index()
-    # plot only a sample for performance
-    res = res.sample(min(500_000, len(res)))
-    res.columns = ['time', 'agent', 'opinions']
-    res.plot(x='time', y='opinions', kind="scatter", facecolors='none', edgecolors='black', alpha=0.02, linewidths=0.5)
-    plt.ylim(-1, 1)
-    plt.title(title)
+    # we don't need data for every single timestep, would require way too much memory
+    if len(agents_df.index) > 100:
+        timesteps_to_keep = np.rint(np.linspace(start=0, stop=timesteps - 1, num=100))
+        agents_df = agents_df.iloc[timesteps_to_keep, :]
+
+    agents_df.index.name = 'Timestep'
+    #agents_df.to_csv('agent_opinions.csv')
+
+    agents_stacked = agents_df.stack().reset_index()
+    agents_stacked.columns = ["Timestep", "Agent", "Opinion"]
+
+    #black background for plot
+    ax.set_facecolor('black')
+
+    cmap = plt.get_cmap("bwr")
+    ax.scatter(x=agents_stacked['Timestep'], y=agents_stacked['Opinion'], vmin=-1, vmax=1,
+                cmap=cmap, c=agents_stacked['Opinion'], s=16.0, alpha=0.1, edgecolors="none")
+    ax.set_title(f'Agent opinions across {agents_stacked.Timestep.max()} timesteps')
+    #ax.set_xlabel('time')
+    #ax.set_ylabel('opinion')
 
 if __name__ == '__main__':
     res = get_von_neumann_neighborhood(3, 5, 5)
