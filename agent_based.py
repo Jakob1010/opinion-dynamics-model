@@ -83,7 +83,7 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
         if (t % 500 == 0):
             print(f'simulated {t} of {max_t} timesteps')# log progress so we don't panic because we don't see anything
 
-    print_run_statistics(agents, max_t)
+    print_run_statistics(agents, max_t, mu, tau, neighborhood, t, concurrent_updates)
     return agents, grid
 
 def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
         plot_grid_data(grid.get_raw_opinions(), title="final grid state", ax=axs[1])
         plt.tight_layout()
-        plt.subplots_adjust(top=0.87)
+        plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
         plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
         plot_agent_opinions(agents, ax=axs[0])
         plt.show()

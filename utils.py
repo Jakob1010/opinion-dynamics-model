@@ -54,8 +54,8 @@ def plot_agent_opinions(agents, ax):
     timesteps = len(agents_df.index)
 
     # we don't need data for every single timestep, would require way too much memory
-    if len(agents_df.index) > 100:
-        timesteps_to_keep = np.rint(np.linspace(start=0, stop=timesteps - 1, num=100))
+    if len(agents_df.index) > 101:
+        timesteps_to_keep = np.rint(np.linspace(start=0, stop=timesteps - 1, num=101))
         agents_df = agents_df.iloc[timesteps_to_keep, :]
 
     agents_df.index.name = 'Timestep'
@@ -69,10 +69,10 @@ def plot_agent_opinions(agents, ax):
 
     cmap = plt.get_cmap("bwr")
     ax.scatter(x=agents_stacked['Timestep'], y=agents_stacked['Opinion'], vmin=-1, vmax=1,
-                cmap=cmap, c=agents_stacked['Opinion'], s=16.0, alpha=0.1, edgecolors="none")
+                cmap=cmap, c=agents_stacked['Opinion'], s=32.0, alpha=0.1, edgecolors="none")
     ax.set_title(f'Agent opinions across {agents_stacked.Timestep.max()} timesteps')
-    #ax.set_xlabel('time')
-    #ax.set_ylabel('opinion')
+    ax.set_xlabel('time')
+    ax.set_ylabel('opinion')
 
 if __name__ == '__main__':
     res = get_von_neumann_neighborhood(3, 5, 5)
