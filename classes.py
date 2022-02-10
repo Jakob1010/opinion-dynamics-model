@@ -3,6 +3,7 @@ import random
 import numpy as np
 import pandas as pd
 from itertools import groupby
+from dataclasses import dataclass
 
 from utils import get_von_neumann_neighborhood, get_moore_neighborhood
 
@@ -120,3 +121,59 @@ class Grid:
     def get_raw_opinions(self):
         res = [[i.get_opinion() for i in row] for row in self.data]
         return res
+
+@dataclass
+class RunConfig:
+    """Stores the configuration (parameters used) for a particular simulation run"""
+
+    n: int
+    """
+    number of agents, in case of agent-based simulation on grid (neighborhood != 'Social') MUST be perfect square (33x33=1089)
+    """
+
+    timesteps: int
+    """
+    for how many timesteps the simulation should run
+    """
+
+    tau: float
+    """
+    value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
+    """
+
+    mu: float
+    """
+    value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
+    """
+
+    neighborhood: str
+    """
+    defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
+    Accepted values are 'Random', 'Moore', 'Moore 2', 'Von Neumann', 'Von Neumann 2', and 'Social'.
+    
+    For all possible neighborhoods != 'Social', a grid of agents is constructed.
+    For 'Moore' and 'Von Neumann', ' 2' suffix means second degree instead of first degree!
+
+    Use value "Social" for building a social network of agents (graph: vertices=agents, edges="neighborhood"/connection between agents) instead of spatial relationships
+    """
+
+
+    movement_phase: bool
+    """
+    Whether agents can also move; only relevant for grid simulations
+    """
+
+
+    concurrent_updates: bool
+    """
+    Whether to perform updates on all agents every timestep.
+    If concurrent_updates is set to True, all agents are updated simultaneously in a single timestep. Otherwise, in every timestep only a single agent is updated.
+    Due to several updates happening each timestep rather than just a single one, the simulation advances much more quickly.
+    The "concurrent updates" version of a simulation run will be much much further advanced after a given number of time steps compared to the "sequential" version.
+    """
+
+
+    density: float
+    """
+    Value in range [0, 1]; fraction of realised connections between the agents from all possible ones (n*(n-1)/2); only relevant if neighborhood == 'Social'
+    """

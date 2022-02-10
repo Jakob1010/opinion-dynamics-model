@@ -35,8 +35,9 @@ def adjust_opinions(opinion1, opinion2, mu, tau):
     adj2 = opinion2 + mu * (opinion1-opinion2)
     return adj1, adj2
 
-def plot_grid_data(grid_data, ax=None, title=None):
+def plot_opinion_grid(grid_data, ax=None, title=None):
     cmap = plt.get_cmap("bwr")
+    #cmap.set_bad(color='black')
     plt.axis('off')
     img = plt.imshow(grid_data, interpolation='nearest', cmap=cmap, origin='lower')
     plt.clim(-1, 1)
@@ -70,7 +71,7 @@ def plot_agent_opinions(agents, ax):
     cmap = plt.get_cmap("bwr")
     ax.scatter(x=agents_stacked['Timestep'], y=agents_stacked['Opinion'], vmin=-1, vmax=1,
                 cmap=cmap, c=agents_stacked['Opinion'], s=32.0, alpha=0.1, edgecolors="none")
-    ax.set_title(f'Agent opinions across {agents_stacked.Timestep.max()} timesteps')
+    ax.set_title(f'Agent opinions over {agents_stacked.Timestep.max()} timesteps')
     ax.set_xlabel('time')
     ax.set_ylabel('opinion')
 

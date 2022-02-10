@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 import pandas as pd
-import time
 import math  
+import dataclasses
 
 from utils import *
-from classes import Grid, Agent
+from classes import Grid, Agent, RunConfig
 
 
 def simulate_step(grid: Grid, agents: list[Agent], mu, tau, neighborhood, timestep, concurrent_updates):
@@ -70,22 +70,35 @@ def do_movement_phase(grid: Grid, agents: list[Agent], neighborhood):
     x2, y2 = agent2.get_coords()
     grid.swap_positions(x1, y1, x2, y2)
 
-def do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates):
+def do_param_sweep(base_run_config: RunConfig, mus, taus):
     run_number = 0
     for mu in mus:
         for tau in taus:
+            run_config = dataclasses.replace(base_run_config, mu=mu, tau=tau)
+
             print(f"Starting Simulation #{run_number}")
-            _, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates) 
+            _, grid = do_one_run(run_config) 
             print(f"Finished Simulation #{run_number}\n")
             run_number += 1
             plt.subplot(len(mus), len(taus), run_number)
-            plot_grid_data(grid.get_raw_opinions(), f"{mu=}, {tau=}")
+            plot_opinion_grid(grid.get_raw_opinions(), title=f"{mu=}, {tau=}")
             # TODO add more plots if needed
 
-    plt.suptitle(f"Simulation results\nneighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
+    plt.suptitle(f"Simulation results\nneighborhood: {sim_config.neighborhood}, "+ 
+                f"{'' if sim_config.movement_phase else 'no '}movement, "+ 
+                f"{'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
 
 
-def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
+def do_one_run(run_config: RunConfig):
+    # Python doesn't have object destructuring like JavaScript :(
+    mu = run_config.mu
+    tau = run_config.tau
+    n = run_config.n
+    max_t = run_config.timesteps
+    movement_phase = run_config.movement_phase
+    concurrent_updates = run_config.concurrent_updates
+    neighborhood = run_config.neighborhood
+
     random.seed(1234567890)
     agents = []
     grid = Grid(n)
@@ -106,10 +119,17 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
         if (t % 500 == 0):
             print(f'simulated {t} of {max_t} timesteps')# log progress so we don't panic because we don't see anything
 
-    print_run_statistics(agents, max_t, mu, tau, neighborhood, t, concurrent_updates)
+    print_run_statistics(agents, run_config)
     return agents, grid
 
-def do_one_run_network(mu, tau, n, max_t, concurrent_updates, density):
+def do_one_run_network(run_config: RunConfig):
+    mu = run_config.mu
+    tau = run_config.tau
+    n = run_config.n
+    max_t = run_config.timesteps
+    concurrent_updates = run_config.concurrent_updates
+    density = run_config.density
+
     random.seed(1234567890)
     agents = []
     # create random agents
@@ -134,75 +154,100 @@ def do_one_run_network(mu, tau, n, max_t, concurrent_updates, density):
         t += 1
         simulate_step_network(agents, mu, tau, t, concurrent_updates)
         
-    print_run_statistics(agents, max_t)
+    print_run_statistics(agents, run_config)
     return agents
 
-def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
-    start = time.time()
+def print_run_statistics(agents: list[Agent], run_config: RunConfig):
     init_opinions = pd.Series([a.get_temporal_opinions()[0] for a in agents], name="Initial opinion")
-    final_opinions = pd.Series([a.get_temporal_opinions()[max_t] for a in agents], name="Final opinion")
+    final_opinions = pd.Series([a.get_temporal_opinions()[run_config.timesteps] for a in agents], name="Final opinion")
     successful_conversations = np.sum([a.get_number_of_opinion_adjustments() for a in agents])
     total_conversations = np.sum([a.get_number_of_conversations() for a in agents])
 
     conversation_success_rate = successful_conversations/total_conversations
-    average_conversation_rate = total_conversations/len(agents)/(max_t - 1)
+    average_conversation_rate = total_conversations/len(agents)/(run_config.timesteps - 1)
 
     print(f'\n---Simulation run summary---')
-    print(f'total number of timesteps: {max_t}')
-    print('other simulation parameters:')
-    print(", ".join(f"{param}: {value}" for param, value in other_sim_params.items()))
+    params = vars(run_config)
+    print('Simulation parameters:')
+    print("\n".join(f"{param}: {value}" for param, value in params.items()))
+    print(f'\nStats:')
     print(f'Total number of conversations: {total_conversations}')
     print(f'Total number of successful conversations: {successful_conversations}')
     print(f'Conversation success rate: {round(conversation_success_rate, 2)}')
     print(f'Average conversation rate: {round(average_conversation_rate, 2)}')
     print(f'Stats for opinion development:')
     print(pd.concat([init_opinions, final_opinions], axis=1).describe())
-    end = time.time()
-    print(f'executed in {end - start} seconds')
     print('\n')
 
     return
 
 
 if __name__ == '__main__':
-    # adapt parameters here
-    n = 100  # number of agents, in case of grid MUST be perfect square (33x33=1089)
-    max_t = 1000
-    neighborhood = "Social"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
-    # Option "Social" fpr building a social network instead of spatial realtionships
-    tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
-    mu = 0.1 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
+    # Note: for explanation of all simulation parameters, have a look into RunConfig
 
-    param_sweep = False # if True, all combinations of mus and taus (provided below) are tested in separate simulations with the same initial grid 
-    mus = [0.1, 0.2, 0.3, 0.5]
-    taus = [0.5, 0.75, 1, 1.5, 1.75]
+    param_sweep: bool = False
+    """
+    if True, all combinations of mus and taus are tested in separate simulations with the same initial grid
+    """
 
-    movement_phase = False # whether agents can also move; only relevant for grid simulations
+    # provide values for parameter sweep here (if param_sweep == True)
+    mus: list[float] = [0.1, 0.2, 0.3, 0.5]
+    """
+    Values to test for mu (if param_sweep == True)
+    """
 
-    concurrent_updates = False  # whether to perform updates on all agents every timestep
-    # if concurrent_updates is set to True, all agents are updated simultaneously in a single timestep
-    # due to several updates happening each timestep rather than just a single one, the simulation advances much more quickly
-    # the "concurrent updates" version of a simulation will be much much further advanced after a given number of time steps compared to the "sequential" version
+    taus: list[float] = [0.2, 0.4, 0.6, 0.8, 1]
+    """
+    Values to test for tau (if param_sweep == True)
+    """
 
-    density =  0.05; #Percentage of realised connections between the agents from all possible ones (n*(n-1)/2)
+    # else, we just use values for mu and tau defined here
+    mu = 0.1
+    tau = 0.5
 
-    # End of parameters
+    # define config for running the simulation (or simulations in case of parameter sweep) here
+    # if param_sweep == true, several simulation runs with each possible combination of mu and tau from above lists (mus and taus) will be executed
+    # check documentation for RunConfig for detailed explanation of what parameters mean
+    sim_config = RunConfig(
+        n=1089,
+        timesteps=1000,
+        neighborhood="Social",
+        mu=mu,
+        tau=tau,
+        movement_phase=True,
+        concurrent_updates=True,
+        density=0.2  
+    )
 
     if param_sweep:
-        # Code for parameter sweep:
-        do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates)
+        # Code for parameter sweep
+        if sim_config.neighborhood == 'Social':
+            raise ValueError('parameter sweep not yet implemented for social network')
+        do_param_sweep(sim_config, mus, taus)
         plt.show()
     else:
         # Code for one run:
-        if neighborhood != 'Social':
-            agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
-            
-        else:
-            agents = do_one_run_network(mu, tau, n, max_t, concurrent_updates, density)
-            fig, axs = plt.subplots(1, 1, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+        if sim_config.neighborhood != 'Social':
+            agents, grid = do_one_run(sim_config)
+            fig, axs = plt.subplots(1, 2, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+
+            plot_opinion_grid(grid.get_raw_opinions(), title="final grid state", ax=axs[1])
             plt.tight_layout()
             plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
-            plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
+            plt.suptitle(f"Simulation results after {sim_config.timesteps} timesteps\n{sim_config.mu=}, {sim_config.tau=}" +
+                        f", neighborhood: {sim_config.neighborhood}, {'' if sim_config.movement_phase else 'no '}movement,"+
+                        f" {'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
+            plot_agent_opinions(agents, ax=axs[0])
+            plt.show()
+            
+        else:
+            agents = do_one_run_network(sim_config)
+            fig, axs = plt.subplots(1, 1, figsize=(12, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
+            plt.suptitle(f"Simulation results after {sim_config.timesteps} timesteps\n{sim_config.mu=}, {sim_config.tau=}" +
+                        f", neighborhood: {sim_config.neighborhood}, {'' if sim_config.movement_phase else 'no '}movement,"+
+                        f" {'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
             plot_agent_opinions(agents, ax=axs)
             plt.show()
 
