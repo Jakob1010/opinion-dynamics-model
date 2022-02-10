@@ -177,3 +177,13 @@ class RunConfig:
     """
     Value in range [0, 1]; fraction of realised connections between the agents from all possible ones (n*(n-1)/2); only relevant if neighborhood == 'Social'
     """
+
+    id: str
+    """
+    unique identifier for simulation run
+    """
+
+    run_number: int = -1
+    """
+    set to number > 0 if this run is part of a series of parameter sweep simulation runs
+    """
