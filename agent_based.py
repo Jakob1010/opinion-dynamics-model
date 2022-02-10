@@ -183,7 +183,7 @@ def log_run_summary(agents: list[Agent], run_config: RunConfig):
     ])
 
     print(log_content)
-    with open(f'logs/{run_config.id}{"_run_" + str(run_config.run_number) if run_config.run_number >= 0 else ""}.txt', "w") as f:
+    with open(f'results/logs/{run_config.id}{"_run_" + str(run_config.run_number) if run_config.run_number >= 0 else ""}.txt', "w") as f:
         f.write(log_content)
 
     return
@@ -192,7 +192,7 @@ def log_run_summary(agents: list[Agent], run_config: RunConfig):
 if __name__ == '__main__':
     # Note: for explanation of all simulation parameters, have a look into RunConfig
 
-    param_sweep: bool = True
+    param_sweep: bool = False
     """
     if True, all combinations of mus and taus are tested in separate simulations with the same initial grid
     """
@@ -232,6 +232,7 @@ if __name__ == '__main__':
         if sim_config.neighborhood == 'Social':
             raise ValueError('parameter sweep not yet implemented for social network')
         do_param_sweep(sim_config, mus, taus)
+        plt.savefig(f'results/img/grid_{sim_config.id}.png')
         plt.show()
     else:
         # Code for one run:
@@ -246,6 +247,7 @@ if __name__ == '__main__':
                         f", neighborhood: {sim_config.neighborhood}, {'' if sim_config.movement_phase else 'no '}movement,"+
                         f" {'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
             plot_agent_opinions(agents, ax=axs[0])
+            plt.savefig(f'results/img/grid_{sim_config.id}.png')
             plt.show()
             
         else:
@@ -257,6 +259,7 @@ if __name__ == '__main__':
                         f", neighborhood: {sim_config.neighborhood}, {'' if sim_config.movement_phase else 'no '}movement,"+
                         f" {'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
             plot_agent_opinions(agents, ax=axs)
+            plt.savefig(f'results/img/network_{sim_config.id}.png')
             plt.show()
 
     

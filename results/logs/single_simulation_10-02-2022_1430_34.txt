@@ -1,0 +1,30 @@
+
+---Simulation run summary---
+Simulation parameters:
+n: 1089
+timesteps: 1000
+tau: 0.5
+mu: 0.1
+neighborhood: Moore 2
+movement_phase: True
+concurrent_updates: True
+density: 0.2
+id: single_simulation_10-02-2022_1430_34
+run_number: -1
+
+Stats:
+Total number of conversations: 849369
+Total number of successful conversations: 696407
+Conversation success rate: 0.82
+Average conversation rate: 0.78
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.168416
+min          -0.998705      -0.870820
+25%          -0.508882      -0.048790
+50%          -0.031748      -0.010997
+75%           0.550749       0.004319
+max           0.999757       0.660281
+
