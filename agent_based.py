@@ -72,6 +72,8 @@ def do_movement_phase(grid: Grid, agents: list[Agent], neighborhood):
     grid.swap_positions(x1, y1, x2, y2)
 
 def do_param_sweep(base_run_config: RunConfig, mus, taus):
+    plt.figure(figsize=(18, 16))
+
     run_number = 0
     for mu in mus:
         for tau in taus:
@@ -217,7 +219,7 @@ if __name__ == '__main__':
     # check documentation for RunConfig for detailed explanation of what parameters mean
     sim_config = RunConfig(
         n=1089,
-        timesteps=1000,
+        timesteps=10,
         neighborhood="Moore 2",
         mu=mu,
         tau=tau,
