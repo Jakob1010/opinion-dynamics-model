@@ -194,7 +194,7 @@ def log_run_summary(agents: list[Agent], run_config: RunConfig):
 if __name__ == '__main__':
     # Note: for explanation of all simulation parameters, have a look into RunConfig
 
-    param_sweep: bool = True
+    param_sweep: bool = False
     """
     if True, all combinations of mus and taus are tested in separate simulations with the same initial grid
     """
@@ -219,8 +219,8 @@ if __name__ == '__main__':
     # check documentation for RunConfig for detailed explanation of what parameters mean
     sim_config = RunConfig(
         n=1089,
-        timesteps=10,
-        neighborhood="Moore 2",
+        timesteps=100,
+        neighborhood="Social",
         mu=mu,
         tau=tau,
         movement_phase=True,
@@ -257,7 +257,7 @@ if __name__ == '__main__':
             fig, axs = plt.subplots(1, 1, figsize=(12, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
             plt.tight_layout()
             plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
-            plt.suptitle(f"Simulation results after {sim_config.timesteps} timesteps ({sim_config.n} agents)\nmue={sim_config.mu}, ta={sim_config.tau}" +
+            plt.suptitle(f"Simulation results after {sim_config.timesteps} timesteps ({sim_config.n} agents)\nmue={sim_config.mu}, tau={sim_config.tau}" +
                         f", neighborhood: {sim_config.neighborhood}, {'' if sim_config.movement_phase else 'no '}movement,"+
                         f" {'concurrent ' if sim_config.concurrent_updates else 'sequential '} updates")
             plot_agent_opinions(agents, ax=axs)

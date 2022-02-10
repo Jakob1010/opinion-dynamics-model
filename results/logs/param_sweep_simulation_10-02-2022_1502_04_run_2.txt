@@ -1,0 +1,30 @@
+
+---Simulation run summary---
+Simulation parameters:
+n: 1089
+timesteps: 1000
+tau: 1
+mu: 0.1
+neighborhood: Von Neumann
+movement_phase: True
+concurrent_updates: True
+density: 0.2
+id: param_sweep_simulation_10-02-2022_1502_04
+run_number: 2
+
+Stats:
+Total number of conversations: 897435
+Total number of successful conversations: 891644
+Conversation success rate: 0.99
+Average conversation rate: 0.82
+Stats for opinion development:
+       Initial opinion  Final opinion
+count      1089.000000    1089.000000
+mean          0.000759       0.000759
+std           0.583277       0.027853
+min          -0.998705      -0.056880
+25%          -0.508882      -0.017722
+50%          -0.031748       0.000467
+75%           0.550749       0.014931
+max           0.999757       0.061075
+
