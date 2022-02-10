@@ -71,7 +71,7 @@ def plot_agent_opinions(agents, ax):
     cmap = plt.get_cmap("bwr")
     ax.scatter(x=agents_stacked['Timestep'], y=agents_stacked['Opinion'], vmin=-1, vmax=1,
                 cmap=cmap, c=agents_stacked['Opinion'], s=32.0, alpha=0.1, edgecolors="none")
-    ax.set_title(f'Agent opinions across {agents_stacked.Timestep.max()} timesteps')
+    ax.set_title(f'Agent opinions over {agents_stacked.Timestep.max()} timesteps')
     ax.set_xlabel('time')
     ax.set_ylabel('opinion')
 
