@@ -14,6 +14,7 @@ class Agent:
         self.__x = x
         self.__y = y
         self.last_interaction_at = 0
+        self.connections = []
     
     
     def get_opinion(self):
@@ -64,6 +65,10 @@ class Agent:
         self.__x = x
         self.__y = y
 
+    def add_connection(self, agent):
+        self.connections.append(agent)
+
+    
 
 class Grid:
     # for 'Moore' and 'Von Neumann', ' 2' suffix means second degree instead of first degree!

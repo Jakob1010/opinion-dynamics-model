@@ -3,6 +3,7 @@ import random
 import numpy as np
 import pandas as pd
 import time
+import math  
 
 from utils import *
 from classes import Grid, Agent
@@ -33,6 +34,26 @@ def simulate_step(grid: Grid, agents: list[Agent], mu, tau, neighborhood, timest
         agent1.update_opinion(op1, timestep)
         agent2.update_opinion(op2, timestep)
 
+def simulate_step_network(agents: list[Agent], mu, tau, timestep, concurrent_updates):
+    if concurrent_updates:
+        for agent in agents:
+            if agent.last_interaction_at >= timestep:  # has already been updated by a neighbor
+                continue
+            neighbor = random.choice(agent.connections)
+            if neighbor is not None and neighbor.last_interaction_at < timestep:  # neighbor has not updated its opinion in this step
+                op1 = agent.get_opinion()
+                op2 = neighbor.get_opinion()
+                op1, op2 = adjust_opinions(op1, op2, mu, tau)
+                agent.update_opinion(op1, timestep)
+                neighbor.update_opinion(op2, timestep)
+    else:
+        agent1 = random.choice(agents)
+        agent2 = random.choice(agent1.connections)
+        op1 = agent1.get_opinion()
+        op2 = agent2.get_opinion()
+        op1, op2 = adjust_opinions(op1, op2, mu, tau)
+        agent1.update_opinion(op1, timestep)
+        agent2.update_opinion(op2, timestep)
 
 def do_movement_phase(grid: Grid, agents: list[Agent], neighborhood):
     """
@@ -86,6 +107,34 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
     print_run_statistics(agents, max_t, mu, tau, neighborhood, t, concurrent_updates)
     return agents, grid
 
+def do_one_run_network(mu, tau, n, max_t, concurrent_updates, density):
+    random.seed(1234567890)
+    agents = []
+    # create random agents
+    agents = []
+    for i in range(n):
+        new_agent= Agent(random.uniform(-1, 1), 0, 0, timesteps=max_t)
+        agents.append(new_agent)
+    # link to random nodes
+    linkamount = math.floor((n*(n-1))/2 * density)
+    for i in range(linkamount):
+        num1 = 0
+        num2 = 0
+        while num1 == num2:
+            num1 = random.randrange(n)
+            num2= random.randrange(n)
+        agent1= agents[num1]
+        agent2= agents[num2]
+        agent1.add_connection(agent2)
+        agent2.add_connection(agent1)
+    t = 0
+    while t < max_t:
+        t += 1
+        simulate_step_network(agents, mu, tau, t, concurrent_updates)
+        
+    print_run_statistics(agents, max_t)
+    return agents
+
 def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
     start = time.time()
     init_opinions = pd.Series([a.get_temporal_opinions()[0] for a in agents], name="Initial opinion")
@@ -117,7 +166,8 @@ if __name__ == '__main__':
     # adapt parameters here
     n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
     max_t = 100
-    neighborhood = "Moore 2"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions 
+    neighborhood = "Social"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
+    # Option "Social" fpr building a social network instead of spatial realtionships
     tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
     mu = 0.1 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
 
@@ -127,10 +177,12 @@ if __name__ == '__main__':
 
     movement_phase = False # whether agents can also move; only relevant for grid simulations
 
-    concurrent_updates = True  # whether to perform updates on all agents every timestep
+    concurrent_updates = False  # whether to perform updates on all agents every timestep
     # if concurrent_updates is set to True, all agents are updated simultaneously in a single timestep
     # due to several updates happening each timestep rather than just a single one, the simulation advances much more quickly
     # the "concurrent updates" version of a simulation will be much much further advanced after a given number of time steps compared to the "sequential" version
+
+    density =  0.2; #Percentage of realised connections between the agents from all possible ones (n*(n-1)/2)
 
     # End of parameters
 
@@ -140,14 +192,17 @@ if __name__ == '__main__':
         plt.show()
     else:
         # Code for one run:
-        agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
-        fig, axs = plt.subplots(1, 2, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+        if neighborhood != 'Social':
+            agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
+            
+        else:
+            agents = do_one_run_network(mu, tau, n, max_t, concurrent_updates, density)
+            fig, axs = plt.subplots(1, 1, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
+            plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
+            plot_agent_opinions(agents, ax=axs)
+            plt.show()
 
-        plot_grid_data(grid.get_raw_opinions(), title="final grid state", ax=axs[1])
-        plt.tight_layout()
-        plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
-        plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
-        plot_agent_opinions(agents, ax=axs[0])
-        plt.show()
     
 
