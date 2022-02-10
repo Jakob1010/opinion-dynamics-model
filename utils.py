@@ -35,8 +35,9 @@ def adjust_opinions(opinion1, opinion2, mu, tau):
     adj2 = opinion2 + mu * (opinion1-opinion2)
     return adj1, adj2
 
-def plot_grid_data(grid_data, ax=None, title=None):
+def plot_opinion_grid(grid_data, ax=None, title=None):
     cmap = plt.get_cmap("bwr")
+    #cmap.set_bad(color='black')
     plt.axis('off')
     img = plt.imshow(grid_data, interpolation='nearest', cmap=cmap, origin='lower')
     plt.clim(-1, 1)

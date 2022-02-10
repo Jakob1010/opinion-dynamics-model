@@ -77,7 +77,7 @@ def do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates):
             print(f"Finished Simulation #{run_number}\n")
             run_number += 1
             plt.subplot(len(mus), len(taus), run_number)
-            plot_grid_data(grid.get_raw_opinions(), f"{mu=}, {tau=}")
+            plot_opinion_grid(grid.get_raw_opinions(), title=f"{mu=}, {tau=}")
             # TODO add more plots if needed
 
     plt.suptitle(f"Simulation results\nneighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
@@ -104,7 +104,7 @@ def do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates):
         if (t % 500 == 0):
             print(f'simulated {t} of {max_t} timesteps')# log progress so we don't panic because we don't see anything
 
-    print_run_statistics(agents, max_t, mu, tau, neighborhood, t, concurrent_updates)
+    print_run_statistics(agents, max_t)
     return agents, grid
 
 def do_one_run_network(mu, tau, n, max_t, concurrent_updates, density):
@@ -165,8 +165,8 @@ def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
 if __name__ == '__main__':
     # adapt parameters here
     n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
-    max_t = 100
-    neighborhood = "Social"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
+    max_t = 10
+    neighborhood = "Moore 2"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
     # Option "Social" fpr building a social network instead of spatial realtionships
     tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
     mu = 0.1 # value in range [0, 0.5]; defines how "strong" adjustment of opinion between two agents is (if it happens)
@@ -187,13 +187,23 @@ if __name__ == '__main__':
     # End of parameters
 
     if param_sweep:
-        # Code for parameter sweep:
+        # Code for parameter sweep
+        if neighborhood == 'Social':
+            raise ValueError('parameter sweep not yet implemented for social network')
         do_param_sweep(mus, taus, n, max_t, movement_phase, concurrent_updates)
         plt.show()
     else:
         # Code for one run:
         if neighborhood != 'Social':
             agents, grid = do_one_run(mu, tau, n, max_t, movement_phase, concurrent_updates)
+            fig, axs = plt.subplots(1, 2, figsize=(18, 7))#, gridspec_kw={'width_ratios': [0.8, 1]})
+
+            plot_opinion_grid(grid.get_raw_opinions(), title="final grid state", ax=axs[1])
+            plt.tight_layout()
+            plt.subplots_adjust(top=0.87, left=0.05, bottom=0.1)
+            plt.suptitle(f"Simulation results after {max_t} timesteps\n{mu=}, {tau=}, neighborhood: {neighborhood}, {'' if movement_phase else 'no '}movement, {'concurrent ' if concurrent_updates else 'sequential '} updates")
+            plot_agent_opinions(agents, ax=axs[0])
+            plt.show()
             
         else:
             agents = do_one_run_network(mu, tau, n, max_t, concurrent_updates, density)
