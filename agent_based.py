@@ -48,6 +48,8 @@ def simulate_step_network(agents: list[Agent], mu, tau, timestep, concurrent_upd
                 neighbor.update_opinion(op2, timestep)
     else:
         agent1 = random.choice(agents)
+        while len(agent1.connections) == 0:
+            agent1 = random.choice(agents)
         agent2 = random.choice(agent1.connections)
         op1 = agent1.get_opinion()
         op2 = agent2.get_opinion()
@@ -164,8 +166,8 @@ def print_run_statistics(agents: list[Agent], max_t, **other_sim_params):
 
 if __name__ == '__main__':
     # adapt parameters here
-    n = 1089  # number of agents, in case of grid MUST be perfect square (33x33=1089)
-    max_t = 100
+    n = 100  # number of agents, in case of grid MUST be perfect square (33x33=1089)
+    max_t = 1000
     neighborhood = "Social"  # defines the neighborhood from which a particular agent picks some random other agent to "discuss" with and optionally adjust opinions.
     # Option "Social" fpr building a social network instead of spatial realtionships
     tau = 0.5 # value in range [0, 2]; describes "maximum distance" between two agent's opinions so that they choose to adjust each other's opinions ("move towards each other")
@@ -182,7 +184,7 @@ if __name__ == '__main__':
     # due to several updates happening each timestep rather than just a single one, the simulation advances much more quickly
     # the "concurrent updates" version of a simulation will be much much further advanced after a given number of time steps compared to the "sequential" version
 
-    density =  0.2; #Percentage of realised connections between the agents from all possible ones (n*(n-1)/2)
+    density =  0.05; #Percentage of realised connections between the agents from all possible ones (n*(n-1)/2)
 
     # End of parameters
 
