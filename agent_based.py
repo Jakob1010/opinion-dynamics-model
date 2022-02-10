@@ -219,13 +219,13 @@ if __name__ == '__main__':
     # check documentation for RunConfig for detailed explanation of what parameters mean
     sim_config = RunConfig(
         n=1089,
-        timesteps=100,
+        timesteps=10000,
         neighborhood="Social",
         mu=mu,
         tau=tau,
         movement_phase=True,
         concurrent_updates=True,
-        density=0.2,
+        density=0.05,
         id=f'{"param_sweep" if param_sweep else "single"}_simulation_{datetime.now().strftime("%d-%m-%Y_%H%M_%S")}'
     )
 
