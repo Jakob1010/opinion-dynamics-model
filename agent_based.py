@@ -219,8 +219,8 @@ if __name__ == '__main__':
     # check documentation for RunConfig for detailed explanation of what parameters mean
     sim_config = RunConfig(
         n=1089,
-        timesteps=10000,
-        neighborhood="Social",
+        timesteps=1000,
+        neighborhood="Von Neumann",
         mu=mu,
         tau=tau,
         movement_phase=True,
